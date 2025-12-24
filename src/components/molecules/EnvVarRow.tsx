@@ -5,9 +5,10 @@ import { Badge } from "@/components/atoms";
 
 interface EnvVarRowProps {
   envVar: EnvironmentVariable;
+  showAppColumn?: boolean;
 }
 
-export default function EnvVarRow({ envVar }: EnvVarRowProps) {
+export default function EnvVarRow({ envVar, showAppColumn = true }: EnvVarRowProps) {
   const [showValue, setShowValue] = useState(false);
 
   return (
@@ -53,11 +54,13 @@ export default function EnvVarRow({ envVar }: EnvVarRowProps) {
           )}
         </div>
       </td>
-      <td className="px-6 py-4">
-        <span className="text-secondary-600 dark:text-secondary-400">
-          {envVar.app}
-        </span>
-      </td>
+      {showAppColumn && (
+        <td className="px-6 py-4">
+          <span className="text-secondary-600 dark:text-secondary-400">
+            {envVar.app}
+          </span>
+        </td>
+      )}
       <td className="px-6 py-4">
         <div className="flex items-center gap-2">
           <button className="p-2 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors group">

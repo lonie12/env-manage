@@ -260,16 +260,13 @@ export default function AppDetails() {
                         Value
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-secondary-700 dark:text-secondary-300 uppercase tracking-wider">
-                        App
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-secondary-700 dark:text-secondary-300 uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {appEnvVars.map((envVar) => (
-                      <EnvVarRow key={envVar.id} envVar={envVar} />
+                      <EnvVarRow key={envVar.id} envVar={envVar} showAppColumn={false} />
                     ))}
                   </tbody>
                 </table>
