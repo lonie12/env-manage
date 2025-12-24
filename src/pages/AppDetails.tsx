@@ -284,30 +284,27 @@ export default function AppDetails() {
       </div>
 
       {/* Live Logs Console */}
-      <div className="h-80 bg-secondary-950 border-t-2 dark:border-[0.4px] border-secondary-700 flex flex-col">
-        <div className="flex items-center justify-between px-6 py-3 bg-secondary-900 border-b dark:border-[0.4px] border-secondary-800">
+      <div className="bg-white dark:bg-secondary-900 rounded-xl border dark:border-[0.4px] border-secondary-200 dark:border-secondary-700 overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b dark:border-[0.4px] border-secondary-200 dark:border-secondary-700">
           <div className="flex items-center gap-3">
-            <DocumentText1
-              size={20}
-              className="text-primary-400"
-              variant="Bold"
-              color="currentColor"
-            />
-            <h3 className="text-sm font-semibold text-secondary-100">
-              Live Logs
-            </h3>
-            <Badge className="bg-success-900 text-success-300 text-xs">
+            <DocumentText1 size={20} className="text-primary-400" variant="Bold" color="currentColor" />
+            <h3 className="text-xl font-semibold text-secondary-900 dark:text-secondary-100">Live Logs</h3>
+            <Badge className="bg-success-100 text-success-700 dark:bg-success-900 dark:text-success-300 text-sm">
               {appLogs.length} entries
             </Badge>
           </div>
-          <button className="text-xs text-secondary-400 hover:text-secondary-200 transition-colors">
-            Clear Console
-          </button>
+          <button className="text-xs text-secondary-400 hover:text-secondary-200 transition-colors">Clear Console</button>
         </div>
-        <div className="flex-1 overflow-y-auto font-mono text-xs">
-          {appLogs.map((log) => (
-            <LogEntryRow key={log.id} log={log} />
-          ))}
+        <div className="p-6">
+          {appLogs.length > 0 ? (
+            <div className="max-h-80 overflow-y-auto font-mono text-xs space-y-2">
+              {appLogs.map((log) => (
+                <LogEntryRow key={log.id} log={log} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-secondary-500 dark:text-secondary-400 py-8">No logs yet</p>
+          )}
         </div>
       </div>
     </div>
