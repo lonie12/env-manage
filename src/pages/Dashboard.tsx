@@ -7,8 +7,10 @@ import { Box, Cpu, Setting3 } from "iconsax-react";
 import { mockApps } from "@/mocks/apps.mock";
 import { mockProcesses } from "@/mocks/processes.mock";
 import { mockEnvVars } from "@/mocks/environment.mock";
+import { useNavigate } from "react-router";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const activeProcesses = mockProcesses.filter((p) => p.status === "online");
   const apps = mockApps; // Change to [] to see empty state
 
@@ -33,7 +35,7 @@ export default function Dashboard() {
           iconVariant="Bold"
           primaryValue={apps.length}
           colorScheme="primary"
-          onClick={() => {}}
+          onClick={() => navigate("/apps")}
         />
         <ActionCard
           title="Active Processes"
@@ -42,7 +44,7 @@ export default function Dashboard() {
           iconVariant="Bold"
           primaryValue={activeProcesses.length}
           colorScheme="success"
-          onClick={() => {}}
+          onClick={() => navigate("/processes")}
         />
         <ActionCard
           title="Environment Vars"
@@ -51,7 +53,7 @@ export default function Dashboard() {
           iconVariant="Bold"
           primaryValue={mockEnvVars.length}
           colorScheme="warning"
-          onClick={() => {}}
+          onClick={() => navigate("/environment")}
         />
         {/* <ActionCard
           title="Logs"
@@ -70,7 +72,10 @@ export default function Dashboard() {
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-secondary-300 dark:border-secondary-700 hover:border-primary-400 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/10 transition-all group">
+          <button
+            onClick={() => navigate("/apps")}
+            className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-secondary-300 dark:border-secondary-700 hover:border-primary-400 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/10 transition-all group"
+          >
             <Box
               color="currentColor"
               size={24}
@@ -86,7 +91,10 @@ export default function Dashboard() {
               </p>
             </div>
           </button>
-          <button className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-secondary-300 dark:border-secondary-700 hover:border-success-400 dark:hover:border-success-600 hover:bg-success-50 dark:hover:bg-success-900/10 transition-all group">
+          <button
+            onClick={() => navigate("/processes")}
+            className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-secondary-300 dark:border-secondary-700 hover:border-success-400 dark:hover:border-success-600 hover:bg-success-50 dark:hover:bg-success-900/10 transition-all group"
+          >
             <Cpu
               color="currentColor"
               size={24}

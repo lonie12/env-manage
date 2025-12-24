@@ -1,10 +1,29 @@
+import { useState } from "react";
 import { Add } from "iconsax-react";
 import { Button } from "@/components/atoms";
-import { AppCard, EmptyStateApps } from "@/components/molecules";
+import { AppCard, EmptyStateApps, AddApplicationModal } from "@/components/molecules";
 import { mockApps } from "@/mocks/apps.mock";
+import type { Application } from "@/mocks/apps.mock";
 
 export default function Apps() {
-  const apps = mockApps; // Change to [] to see empty state
+  const [apps, setApps] = useState(mockApps);
+  const [showAddAppModal, setShowAddAppModal] = useState(false);
+
+  const handleAddApp = (formData: Omit<Application, 'id' | 'uptime' | 'memory' | 'cpu' | 'restarts' | 'lastDeployed'>) => {
+    // Generate new application with auto-generated fields
+    const newApp: Application = {
+      ...formData,
+      id: crypto.randomUUID(),
+      uptime: "0m",
+      memory: "0 MB",
+      cpu: "0%",
+      restarts: 0,
+      lastDeployed: new Date().toISOString().replace('T', ' ').substring(0, 19),
+    };
+
+    setApps([...apps, newApp]);
+    setShowAddAppModal(false);
+  };
 
   return (
     <div className="p-8 space-y-6">
@@ -17,7 +36,11 @@ export default function Apps() {
             Manage your deployed applications
           </p>
         </div>
-        <Button size="lg" className="flex items-center gap-2">
+        <Button
+          size="lg"
+          className="flex items-center gap-2"
+          onClick={() => setShowAddAppModal(true)}
+        >
           <Add color="currentColor" size={20} />
           Add Application
         </Button>
@@ -32,6 +55,14 @@ export default function Apps() {
         </div>
       ) : (
         <EmptyStateApps />
+      )}
+
+      {/* Add Application Modal */}
+      {showAddAppModal && (
+        <AddApplicationModal
+          onSubmit={handleAddApp}
+          onCancel={() => setShowAddAppModal(false)}
+        />
       )}
     </div>
   );
