@@ -1,13 +1,5 @@
 import { Link, useLocation } from "react-router";
-import {
-  Home2,
-  Box,
-  Cpu,
-  Setting3,
-  DocumentText1,
-  Moon,
-  Sun1,
-} from "iconsax-react";
+import { Home2, Box, Cpu, Moon, Sun1, Global, Data } from "iconsax-react";
 import { useTheme } from "@/context";
 import { cn } from "@/lib/utils";
 
@@ -21,8 +13,9 @@ const navItems: NavItem[] = [
   { name: "Dashboard", path: "/", icon: Home2 },
   { name: "Applications", path: "/apps", icon: Box },
   { name: "Processes", path: "/processes", icon: Cpu },
-  { name: "Environment", path: "/environment", icon: Setting3 },
-  { name: "Logs", path: "/logs", icon: DocumentText1 },
+  { name: "Domains", path: "/domains", icon: Global },
+  { name: "Databases", path: "/databases", icon: Data },
+  // { name: "Environment", path: "/environment", icon: Setting3 },
 ];
 
 export default function Sidebar() {
@@ -30,10 +23,10 @@ export default function Sidebar() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-white dark:bg-secondary-900 border-r dark:border-[0.4px] border-secondary-200 dark:border-secondary-700 flex flex-col">
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-white dark:bg-secondary-900 border-r dark:border-r-[0.4px] border-secondary-200 dark:border-secondary-700 flex flex-col">
       {/* Header */}
-      <div className="h-16 flex items-center px-6 border-b dark:border-[0.4px] border-secondary-200 dark:border-secondary-700">
-        <h1 className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+      <div className="h-16 flex items-center px-6 border-b dark:border-b-[0.4px] border-secondary-200 dark:border-secondary-700">
+        <h1 className="text-xl font-bold bg-linear-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
           Server Manager
         </h1>
       </div>
@@ -73,7 +66,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t dark:border-[0.4px] border-secondary-200 dark:border-secondary-700">
+      <div className="p-4 border-t dark:border-t-[0.4px] border-secondary-200 dark:border-secondary-700">
         <button
           onClick={toggleTheme}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-secondary-600 dark:text-secondary-400 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-all"

@@ -7,6 +7,8 @@ import AppLogs from "@/pages/AppLogs";
 import Processes from "@/pages/Processes";
 import Environment from "@/pages/Environment";
 import Logs from "@/pages/Logs";
+import Domains from "@/pages/Domains";
+import Databases from "@/pages/Databases";
 
 export const mainRoutes: RouteObject[] = [
   {
@@ -32,6 +34,14 @@ export const mainRoutes: RouteObject[] = [
       {
         path: "processes",
         element: <Processes />,
+      },
+      {
+        path: "domains",
+        element: <Domains />,
+      },
+      {
+        path: "databases",
+        element: <Databases />,
       },
       {
         path: "environment",
