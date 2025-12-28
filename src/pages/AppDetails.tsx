@@ -11,7 +11,7 @@ import {
   Danger,
 } from "iconsax-react";
 import { Button, Badge } from "@/components/atoms";
-import { Header } from "@/components/organisms";
+import { Header, DatabaseManagement } from "@/components/organisms";
 import {
   EnvVarRow,
   EnvVarForm,
@@ -552,6 +552,9 @@ export default function AppDetails() {
               </table>
             </div>
           </div>
+
+          {/* Database Management */}
+          {id && <DatabaseManagement appId={id} />}
 
           {/* Live Logs Console */}
           <div className="bg-white dark:bg-secondary-900 rounded-xl border dark:border-[0.4px] border-secondary-200 dark:border-secondary-700 overflow-hidden">
