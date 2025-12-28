@@ -13,6 +13,7 @@ const ALLOWED_COMMANDS = [
   'yarn',
   'pnpm',
   'node',
+  'npx',
   'systemctl',
   'psql',
   'mysql',
@@ -27,6 +28,7 @@ const ALLOWED_COMMANDS = [
   'mv',
   'cp',
   'find',
+  'cd',
 ];
 
 export interface ExecResult {

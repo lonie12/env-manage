@@ -4,6 +4,7 @@ import { applicationController } from "../controllers/application.controller";
 import { envVarController } from "../controllers/env-var.controller";
 import { errorController } from "../controllers/error.controller";
 import { deploymentStatusController } from "../controllers/deployment-status.controller";
+import { DatabaseController } from "../controllers/database.controller";
 
 const router = Router();
 
@@ -45,6 +46,15 @@ router.get("/:id/deployment-status", requireAuth, (req, res) =>
 );
 router.delete("/:id/deployment-status", requireDeveloper, (req, res) =>
   deploymentStatusController.clearStatus(req, res)
+);
+router.get("/:id/database/status", requireAuth, (req, res) =>
+  DatabaseController.getStatus(req, res)
+);
+router.get("/:id/database/migrations", requireAuth, (req, res) =>
+  DatabaseController.listMigrations(req, res)
+);
+router.post("/:id/database/:action", requireDeveloper, (req, res) =>
+  DatabaseController.executeAction(req, res)
 );
 router.delete("/:id", requireDeveloper, (req, res) =>
   applicationController.removeApplication(req, res)
