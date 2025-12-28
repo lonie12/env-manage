@@ -72,6 +72,7 @@ export default function DatabaseStatusCard({
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <Box
+            color="currentColor"
             size={20}
             className="text-primary-600 dark:text-primary-400"
             variant="Bold"
