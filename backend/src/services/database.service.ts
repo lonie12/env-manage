@@ -231,6 +231,44 @@ export class DatabaseService {
   }
 
   /**
+   * Get database schema content
+   */
+  static async getSchema(appName: string): Promise<{ success: boolean; schema?: string; error?: string }> {
+    try {
+      const appPath = path.join(SAFE_DIRECTORIES.apps, appName);
+      const schemaPaths = [
+        path.join(appPath, "shared", "schema.ts"),
+        path.join(appPath, "src", "db", "schema.ts"),
+        path.join(appPath, "db", "schema.ts"),
+        path.join(appPath, "schema.ts"),
+      ];
+
+      for (const schemaPath of schemaPaths) {
+        try {
+          const schemaContent = await fs.readFile(schemaPath, "utf-8");
+          return {
+            success: true,
+            schema: schemaContent,
+          };
+        } catch {
+          continue;
+        }
+      }
+
+      return {
+        success: false,
+        error: "Schema file not found",
+      };
+    } catch (error) {
+      throw new Error(
+        `Failed to get schema: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    }
+  }
+
+  /**
    * Mask sensitive parts of database URL
    */
   private static maskDatabaseUrl(url: string): string {

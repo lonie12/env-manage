@@ -53,6 +53,9 @@ router.get("/:id/database/status", requireAuth, (req, res) =>
 router.get("/:id/database/migrations", requireAuth, (req, res) =>
   DatabaseController.listMigrations(req, res)
 );
+router.get("/:id/database/schema", requireAuth, (req, res) =>
+  DatabaseController.getSchema(req, res)
+);
 router.post("/:id/database/:action", requireDeveloper, (req, res) =>
   DatabaseController.executeAction(req, res)
 );

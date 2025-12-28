@@ -92,4 +92,30 @@ export class DatabaseController {
       });
     }
   }
+
+  /**
+   * GET /api/applications/:id/database/schema
+   */
+  static async getSchema(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+
+      const apps = await applicationService.listApplications();
+      const app = apps.find((a: Application) => a.id === id);
+
+      if (!app) {
+        res.status(404).json({ error: 'Application not found' });
+        return;
+      }
+
+      const result = await DatabaseService.getSchema(app.name);
+      res.json(result);
+    } catch (error) {
+      console.error('Get schema error:', error);
+      res.status(500).json({
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+  }
 }
