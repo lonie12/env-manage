@@ -46,6 +46,7 @@ export default function AppDetails() {
   const [isErrorDrawerOpen, setIsErrorDrawerOpen] = useState(false);
   const [deploymentStatus, setDeploymentStatus] =
     useState<DeploymentStatusData | null>(null);
+  const [showAllEnvVars, setShowAllEnvVars] = useState(false);
 
   useEffect(() => {
     loadApp();
@@ -531,7 +532,7 @@ export default function AppDetails() {
                 </thead>
                 <tbody>
                   {envVars.length > 0 ? (
-                    envVars.map((envVar) => (
+                    (showAllEnvVars ? envVars : envVars.slice(0, 5)).map((envVar) => (
                       <EnvVarRow
                         key={envVar.key}
                         envVar={envVar}
@@ -551,6 +552,30 @@ export default function AppDetails() {
                 </tbody>
               </table>
             </div>
+
+            {/* View All Button */}
+            {envVars.length > 5 && !showAllEnvVars && (
+              <div className="px-6 py-4 border-t dark:border-t-[0.4px] border-secondary-200 dark:border-secondary-700 flex justify-center">
+                <button
+                  onClick={() => setShowAllEnvVars(true)}
+                  className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                >
+                  View All ({envVars.length - 5} more)
+                </button>
+              </div>
+            )}
+
+            {/* View Less Button */}
+            {showAllEnvVars && envVars.length > 5 && (
+              <div className="px-6 py-4 border-t dark:border-t-[0.4px] border-secondary-200 dark:border-secondary-700 flex justify-center">
+                <button
+                  onClick={() => setShowAllEnvVars(false)}
+                  className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                >
+                  View Less
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Database Management */}
