@@ -22,7 +22,7 @@ export default function Header({ onAddApp }: HeaderProps) {
       <div className="px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <h1 className="text-xl font-bold bg-linear-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
-          EManage
+          SSH
         </h1>
 
         {/* Actions */}
