@@ -1,10 +1,20 @@
 import path from 'path';
 import fs from 'fs/promises';
 
-// Define safe directories - using getter to ensure NODE_ENV is loaded
-let _cachedDirectories: any = null;
+// Define the type for safe directories
+export interface SafeDirectories {
+  apps: string;
+  nginx: string;
+  nginxEnabled: string;
+  ssl: string;
+  logs: string;
+  pm2: string;
+}
 
-export function getSAFE_DIRECTORIES() {
+// Define safe directories - using getter to ensure NODE_ENV is loaded
+let _cachedDirectories: SafeDirectories | null = null;
+
+export function getSAFE_DIRECTORIES(): SafeDirectories {
   if (!_cachedDirectories) {
     const isDev = process.env.NODE_ENV === 'development';
     _cachedDirectories = {
@@ -20,9 +30,9 @@ export function getSAFE_DIRECTORIES() {
 }
 
 // For backward compatibility
-export const SAFE_DIRECTORIES = new Proxy({}, {
+export const SAFE_DIRECTORIES = new Proxy({} as SafeDirectories, {
   get(target, prop) {
-    return getSAFE_DIRECTORIES()[prop as string];
+    return getSAFE_DIRECTORIES()[prop as keyof SafeDirectories];
   }
 });
 
@@ -40,7 +50,7 @@ export function validatePath(filePath: string, allowedDir: string): boolean {
  */
 export async function safeReadFile(
   filePath: string,
-  directory: keyof typeof SAFE_DIRECTORIES
+  directory: keyof SafeDirectories
 ): Promise<string> {
   const allowedDir = SAFE_DIRECTORIES[directory];
 
@@ -50,8 +60,9 @@ export async function safeReadFile(
 
   try {
     return await fs.readFile(filePath, 'utf-8');
-  } catch (error: any) {
-    throw new Error(`Failed to read file: ${error.message}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Failed to read file: ${message}`);
   }
 }
 
@@ -61,7 +72,7 @@ export async function safeReadFile(
 export async function safeWriteFile(
   filePath: string,
   content: string,
-  directory: keyof typeof SAFE_DIRECTORIES
+  directory: keyof SafeDirectories
 ): Promise<void> {
   const allowedDir = SAFE_DIRECTORIES[directory];
 
@@ -81,8 +92,9 @@ export async function safeWriteFile(
     }
 
     await fs.writeFile(filePath, content, 'utf-8');
-  } catch (error: any) {
-    throw new Error(`Failed to write file: ${error.message}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Failed to write file: ${message}`);
   }
 }
 
@@ -91,7 +103,7 @@ export async function safeWriteFile(
  */
 export async function safeDeleteFile(
   filePath: string,
-  directory: keyof typeof SAFE_DIRECTORIES
+  directory: keyof SafeDirectories
 ): Promise<void> {
   const allowedDir = SAFE_DIRECTORIES[directory];
 
@@ -101,8 +113,9 @@ export async function safeDeleteFile(
 
   try {
     await fs.unlink(filePath);
-  } catch (error: any) {
-    throw new Error(`Failed to delete file: ${error.message}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Failed to delete file: ${message}`);
   }
 }
 

@@ -22,6 +22,8 @@ export interface PM2App {
     status?: string;
     pm_uptime?: number;
     restart_time?: number;
+    pm_err_log_path?: string;
+    pm_out_log_path?: string;
   };
   monit?: {
     cpu?: number;
