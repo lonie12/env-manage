@@ -88,6 +88,8 @@ export default function SchemaViewer({
       startOnLoad: false,
       theme: "default",
       securityLevel: "loose",
+      fontSize: 18,
+      fontFamily: "system-ui, -apple-system, sans-serif",
     });
   }, []);
 
@@ -128,6 +130,22 @@ export default function SchemaViewer({
       const mermaidCode = parseSchemaToMermaid(schema);
       const { svg } = await mermaid.render("schema-diagram", mermaidCode);
       mermaidRef.current.innerHTML = svg;
+
+      // Style the SVG to make it larger and centered
+      const svgElement = mermaidRef.current.querySelector("svg");
+      if (svgElement) {
+        svgElement.style.width = "100%";
+        svgElement.style.height = "auto";
+        svgElement.style.maxWidth = "100%";
+        svgElement.style.minHeight = "400px";
+
+        // Scale text elements for better readability
+        const textElements = svgElement.querySelectorAll("text");
+        textElements.forEach((text) => {
+          const currentSize = text.getAttribute("font-size") || "14";
+          text.setAttribute("font-size", String(parseFloat(currentSize) * 1.2));
+        });
+      }
     } catch (error) {
       console.error("Failed to render Mermaid diagram:", error);
       showToast.error("Failed to render schema diagram");
@@ -138,7 +156,7 @@ export default function SchemaViewer({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-secondary-900 rounded-xl shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col">
+      <div className="bg-white dark:bg-secondary-900 rounded-xl shadow-2xl max-w-7xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-secondary-200 dark:border-secondary-700">
           <div className="flex items-center gap-3">
@@ -169,8 +187,8 @@ export default function SchemaViewer({
               </div>
             </div>
           ) : (
-            <div className="bg-white dark:bg-secondary-800 rounded-lg p-6 overflow-auto border border-secondary-200 dark:border-secondary-700">
-              <div ref={mermaidRef} className="flex items-center justify-center" />
+            <div className="bg-white dark:bg-secondary-800 rounded-lg p-8 overflow-auto border border-secondary-200 dark:border-secondary-700 min-h-[500px]">
+              <div ref={mermaidRef} className="w-full flex items-center justify-center" />
             </div>
           )}
         </div>
