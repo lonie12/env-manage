@@ -1,12 +1,76 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CloseCircle, DocumentCode, CodeCircle } from "iconsax-react";
 import { databaseApi } from "@/api";
 import { showToast } from "@/lib/toast";
+import mermaid from "mermaid";
 
 interface SchemaViewerProps {
   appId: string;
   isOpen: boolean;
   onClose: () => void;
+}
+
+// Parse Drizzle schema to extract table definitions
+function parseSchemaToMermaid(schemaContent: string): string {
+  const lines = schemaContent.split("\n");
+  let mermaidCode = "erDiagram\n";
+
+  // Find table definitions (pgTable, mysqlTable, sqliteTable)
+  const tableRegex = /export const (\w+) = (?:pg|mysql|sqlite)Table\("(\w+)",\s*{/g;
+  const columnRegex = /(\w+):\s*(\w+)\(/g;
+
+  let currentTable: string | null = null;
+  let inTableDefinition = false;
+  let braceCount = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Check for table definition
+    const tableMatch = tableRegex.exec(line);
+    if (tableMatch) {
+      currentTable = tableMatch[2];
+      inTableDefinition = true;
+      braceCount = 1;
+      mermaidCode += `  ${currentTable} {\n`;
+      continue;
+    }
+
+    if (inTableDefinition && currentTable) {
+      // Count braces to know when table definition ends
+      braceCount += (line.match(/{/g) || []).length;
+      braceCount -= (line.match(/}/g) || []).length;
+
+      if (braceCount === 0) {
+        mermaidCode += `  }\n`;
+        inTableDefinition = false;
+        currentTable = null;
+        continue;
+      }
+
+      // Parse column definitions
+      const trimmedLine = line.trim();
+      if (trimmedLine && !trimmedLine.startsWith("//") && !trimmedLine.startsWith("/*")) {
+        const columnMatch = /(\w+):\s*(\w+)\(/.exec(trimmedLine);
+        if (columnMatch) {
+          const columnName = columnMatch[1];
+          const columnType = columnMatch[2];
+
+          // Map Drizzle types to SQL types
+          let sqlType = columnType;
+          if (columnType === "serial" || columnType === "integer") sqlType = "int";
+          if (columnType === "varchar" || columnType === "text") sqlType = "string";
+          if (columnType === "timestamp") sqlType = "datetime";
+          if (columnType === "boolean") sqlType = "bool";
+          if (columnType === "json" || columnType === "jsonb") sqlType = "json";
+
+          mermaidCode += `    ${sqlType} ${columnName}\n`;
+        }
+      }
+    }
+  }
+
+  return mermaidCode;
 }
 
 export default function SchemaViewer({
@@ -16,12 +80,28 @@ export default function SchemaViewer({
 }: SchemaViewerProps) {
   const [schema, setSchema] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const mermaidRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "default",
+      securityLevel: "loose",
+    });
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
       loadSchema();
     }
   }, [isOpen, appId]);
+
+  useEffect(() => {
+    if (schema && mermaidRef.current && !loading) {
+      renderMermaid();
+    }
+  }, [schema, loading]);
 
   const loadSchema = async () => {
     setLoading(true);
@@ -38,6 +118,19 @@ export default function SchemaViewer({
       onClose();
     } finally {
       setLoading(false);
+    }
+  };
+
+  const renderMermaid = async () => {
+    if (!mermaidRef.current) return;
+
+    try {
+      const mermaidCode = parseSchemaToMermaid(schema);
+      const { svg } = await mermaid.render("schema-diagram", mermaidCode);
+      mermaidRef.current.innerHTML = svg;
+    } catch (error) {
+      console.error("Failed to render Mermaid diagram:", error);
+      showToast.error("Failed to render schema diagram");
     }
   };
 
@@ -76,9 +169,9 @@ export default function SchemaViewer({
               </div>
             </div>
           ) : (
-            <pre className="bg-secondary-50 dark:bg-secondary-800 rounded-lg p-4 overflow-x-auto text-sm font-mono text-secondary-900 dark:text-secondary-100 border border-secondary-200 dark:border-secondary-700">
-              <code>{schema}</code>
-            </pre>
+            <div className="bg-white dark:bg-secondary-800 rounded-lg p-6 overflow-auto border border-secondary-200 dark:border-secondary-700">
+              <div ref={mermaidRef} className="flex items-center justify-center" />
+            </div>
           )}
         </div>
 
