@@ -5,7 +5,9 @@ import { mainRoutes } from "@/lib/routes/main.routes";
 import { ThemeProvider, AuthProvider } from "@/context";
 import { Toaster } from "@/lib/toast";
 
-const router = createBrowserRouter(mainRoutes);
+const router = createBrowserRouter(mainRoutes, {
+  basename: "/emanage",
+});
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
