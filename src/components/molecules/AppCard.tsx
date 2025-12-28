@@ -1,12 +1,16 @@
-import { Box, Activity, Calendar, Refresh, Trash } from "iconsax-react";
-import { Link, useNavigate } from "react-router";
-import type { Application } from "@/mocks/apps.mock";
+import { Box, Activity, Calendar, Refresh, Trash, Play, Stop } from "iconsax-react";
+import { useNavigate } from "react-router";
+import type { AppDisplay } from "@/lib/formatters";
 
 interface AppCardProps {
-  app: Application;
+  app: AppDisplay;
+  onRemove?: () => void;
+  onStart?: () => void;
+  onStop?: () => void;
+  onRestart?: () => void;
 }
 
-export default function AppCard({ app }: AppCardProps) {
+export default function AppCard({ app, onRemove, onStart, onStop, onRestart }: AppCardProps) {
   const navigate = useNavigate();
 
   const statusColors = {
@@ -21,7 +25,25 @@ export default function AppCard({ app }: AppCardProps) {
   const handleRemove = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Removing app:", app.name);
+    onRemove?.();
+  };
+
+  const handleStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onStart?.();
+  };
+
+  const handleStop = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onStop?.();
+  };
+
+  const handleRestart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onRestart?.();
   };
 
   return (
@@ -58,7 +80,7 @@ export default function AppCard({ app }: AppCardProps) {
         </span>
       </div>
 
-      {/* Stats */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="flex items-center gap-2">
           <Activity
@@ -76,8 +98,9 @@ export default function AppCard({ app }: AppCardProps) {
             </p>
           </div>
         </div>
+
         <div className="flex items-center gap-2">
-          <Box
+          <Activity
             size={16}
             className="text-secondary-400"
             variant="Outline"
@@ -106,21 +129,36 @@ export default function AppCard({ app }: AppCardProps) {
         </div>
       </div>
 
-      {/* Actions */}
+      {/* Action Buttons */}
       <div className="flex gap-2 mt-4">
-        <Link
-          to={`/apps/${app.id}`}
-          onClick={(e) => e.stopPropagation()}
-          className="flex-1 px-4 py-2 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-lg text-sm font-medium hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors text-center"
+        {app.status === 'running' ? (
+          <button
+            onClick={handleStop}
+            className="flex-1 px-4 py-2 bg-warning-50 dark:bg-warning-900/20 text-warning-600 dark:text-warning-400 rounded-lg text-sm font-medium hover:bg-warning-100 dark:hover:bg-warning-900/30 transition-colors text-center flex items-center justify-center gap-2"
+          >
+            <Stop size={16} color="currentColor" />
+            Stop
+          </button>
+        ) : (
+          <button
+            onClick={handleStart}
+            className="flex-1 px-4 py-2 bg-success-50 dark:bg-success-900/20 text-success-600 dark:text-success-400 rounded-lg text-sm font-medium hover:bg-success-100 dark:hover:bg-success-900/30 transition-colors text-center flex items-center justify-center gap-2"
+          >
+            <Play size={16} color="currentColor" />
+            Start
+          </button>
+        )}
+        <button
+          onClick={handleRestart}
+          className="px-4 py-2 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-lg text-sm font-medium hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors flex items-center gap-2"
         >
-          Manage
-        </Link>
+          <Refresh size={16} color="currentColor" />
+        </button>
         <button
           onClick={handleRemove}
           className="px-4 py-2 bg-danger-50 dark:bg-danger-900/20 text-danger-600 dark:text-danger-400 rounded-lg text-sm font-medium hover:bg-danger-100 dark:hover:bg-danger-900/30 transition-colors flex items-center gap-2"
         >
           <Trash size={16} color="currentColor" />
-          Remove
         </button>
       </div>
     </div>
