@@ -40,7 +40,7 @@ export const databaseApi = {
    */
   getStatus: async (appId: string): Promise<DatabaseStatusResponse> => {
     return apiClient.get<DatabaseStatusResponse>(
-      `/applications/${appId}/database/status`
+      `/api/applications/${appId}/database/status`
     );
   },
 
@@ -49,7 +49,7 @@ export const databaseApi = {
    */
   listMigrations: async (appId: string): Promise<MigrationsListResponse> => {
     return apiClient.get<MigrationsListResponse>(
-      `/applications/${appId}/database/migrations`
+      `/api/applications/${appId}/database/migrations`
     );
   },
 
@@ -61,7 +61,7 @@ export const databaseApi = {
     action: DatabaseAction
   ): Promise<DatabaseActionResponse> => {
     return apiClient.post<DatabaseActionResponse>(
-      `/applications/${appId}/database/${action}`
+      `/api/applications/${appId}/database/${action}`
     );
   },
 
