@@ -38,13 +38,20 @@ export interface ExecResult {
   error?: string;
 }
 
+export interface ExecOptions {
+  cwd?: string;
+  allowedCmd?: string;
+}
+
 /**
  * Safely execute a shell command with validation and sanitization
  */
 export async function safeExec(
   command: string,
-  allowedCmd?: string
+  options?: string | ExecOptions
 ): Promise<ExecResult> {
+  const allowedCmd = typeof options === 'string' ? options : options?.allowedCmd;
+  const cwd = typeof options === 'object' ? options.cwd : undefined;
   try {
     // Get the first word of the command
     const cmdStart = command.trim().split(/\s+/)[0];
@@ -70,6 +77,7 @@ export async function safeExec(
     const { stdout, stderr } = await execPromise(command, {
       timeout: 60000, // 60s timeout
       maxBuffer: 1024 * 1024 * 10, // 10MB max output
+      cwd: cwd, // Optional working directory
     });
 
     return {

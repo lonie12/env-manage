@@ -210,7 +210,7 @@ export class DatabaseService {
           throw new Error(`Unknown database action: ${action}`);
       }
 
-      const result = await safeExec(`cd ${appPath} && ${command}`);
+      const result = await safeExec(command, { cwd: appPath });
 
       if (!result.success) {
         throw new Error(result.error || "Command failed");
