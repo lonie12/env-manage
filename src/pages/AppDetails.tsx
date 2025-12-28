@@ -409,14 +409,8 @@ export default function AppDetails() {
           </div>
 
           {/* Deployment Status */}
-          {deploymentStatus && (
-            <>
-              {console.log(
-                "Rendering DeploymentStatus component with:",
-                deploymentStatus
-              )}
-              <DeploymentStatus status={deploymentStatus} />
-            </>
+          {deploymentStatus && app?.status !== "running" && (
+            <DeploymentStatus status={deploymentStatus} />
           )}
 
           {/* Stats Grid */}
