@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Refresh, Play, DocumentCode } from "iconsax-react";
-import { DatabaseStatusCard, MigrationRow } from "@/components/molecules";
+import { Refresh, Play, DocumentCode, Eye } from "iconsax-react";
+import { DatabaseStatusCard, MigrationRow, SchemaViewer } from "@/components/molecules";
 import { databaseApi, type DatabaseInfo, type Migration } from "@/api";
 import { showToast } from "@/lib/toast";
 
@@ -13,9 +13,11 @@ export default function DatabaseManagement({ appId }: DatabaseManagementProps) {
   const [migrations, setMigrations] = useState<Migration[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [isSchemaViewerOpen, setIsSchemaViewerOpen] = useState(false);
 
   useEffect(() => {
     loadDatabaseInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appId]);
 
   const loadDatabaseInfo = async () => {
@@ -166,7 +168,7 @@ export default function DatabaseManagement({ appId }: DatabaseManagementProps) {
           {actionLoading === "push" ? (
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           ) : (
-            <Refresh size={16} />
+            <Refresh color="currentColor" size={16} />
           )}
           Sync Database
         </button>
@@ -196,6 +198,15 @@ export default function DatabaseManagement({ appId }: DatabaseManagementProps) {
           )}
           Run Migrations
         </button>
+
+        <button
+          onClick={() => setIsSchemaViewerOpen(true)}
+          disabled={actionLoading !== null}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-secondary-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm font-medium"
+        >
+          <Eye color="currentColor" size={16} variant="Bold" />
+          View Schema
+        </button>
       </div>
 
       {/* Migrations List */}
@@ -219,6 +230,13 @@ export default function DatabaseManagement({ appId }: DatabaseManagementProps) {
           </p>
         </div>
       )}
+
+      {/* Schema Viewer Modal */}
+      <SchemaViewer
+        appId={appId}
+        isOpen={isSchemaViewerOpen}
+        onClose={() => setIsSchemaViewerOpen(false)}
+      />
     </div>
   );
 }
