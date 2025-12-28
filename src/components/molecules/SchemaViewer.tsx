@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import { CloseCircle, DocumentCode, CodeCircle } from "iconsax-react";
+import { CloseCircle, DocumentCode, CodeCircle, Refresh, Add, Minus } from "iconsax-react";
 import { databaseApi } from "@/api";
 import { showToast } from "@/lib/toast";
 import mermaid from "mermaid";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 interface SchemaViewerProps {
   appId: string;
@@ -178,7 +179,7 @@ export default function SchemaViewer({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto p-6">
+        <div className="flex-1 overflow-hidden p-6">
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="flex items-center gap-3 text-secondary-500">
@@ -187,9 +188,55 @@ export default function SchemaViewer({
               </div>
             </div>
           ) : (
-            <div className="bg-white dark:bg-secondary-800 rounded-lg p-8 overflow-auto border border-secondary-200 dark:border-secondary-700 min-h-[500px]">
-              <div ref={mermaidRef} className="w-full flex items-center justify-center" />
-            </div>
+            <TransformWrapper
+              initialScale={1}
+              minScale={0.5}
+              maxScale={3}
+              wheel={{ step: 0.1 }}
+              doubleClick={{ disabled: false }}
+              panning={{ disabled: false }}
+            >
+              {({ zoomIn, zoomOut, resetTransform }) => (
+                <>
+                  {/* Zoom Controls */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <button
+                      onClick={() => zoomIn()}
+                      className="p-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+                      title="Zoom In"
+                    >
+                      <Add size={18} variant="Bold" color="currentColor" />
+                    </button>
+                    <button
+                      onClick={() => zoomOut()}
+                      className="p-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+                      title="Zoom Out"
+                    >
+                      <Minus size={18} variant="Bold" color="currentColor" />
+                    </button>
+                    <button
+                      onClick={() => resetTransform()}
+                      className="p-2 bg-secondary-600 hover:bg-secondary-700 text-white rounded-lg transition-colors"
+                      title="Reset View"
+                    >
+                      <Refresh size={18} variant="Bold" color="currentColor" />
+                    </button>
+                    <span className="text-xs text-secondary-500 dark:text-secondary-400 ml-2">
+                      Scroll to zoom, drag to pan
+                    </span>
+                  </div>
+
+                  <TransformComponent
+                    wrapperClass="!w-full !h-full"
+                    contentClass="!w-full !h-full"
+                  >
+                    <div className="bg-white dark:bg-secondary-800 rounded-lg p-8 border border-secondary-200 dark:border-secondary-700 min-h-[500px]">
+                      <div ref={mermaidRef} className="w-full flex items-center justify-center" />
+                    </div>
+                  </TransformComponent>
+                </>
+              )}
+            </TransformWrapper>
           )}
         </div>
 
