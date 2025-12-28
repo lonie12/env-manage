@@ -2,12 +2,16 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import "./index.css";
 import { mainRoutes } from "@/lib/routes/main.routes";
-import { ThemeProvider } from "@/context";
+import { ThemeProvider, AuthProvider } from "@/context";
+import { Toaster } from "@/lib/toast";
 
 const router = createBrowserRouter(mainRoutes);
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+      <Toaster position="top-right" />
+    </AuthProvider>
   </ThemeProvider>
 );

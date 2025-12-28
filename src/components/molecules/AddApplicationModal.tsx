@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
 import { InfoCircle } from "iconsax-react";
 import { Input, Button } from "@/components/atoms";
-import type { Application } from "@/mocks/apps.mock";
+import type { DeployApplicationData } from "@/api";
 
 interface AddApplicationModalProps {
-  onSubmit: (
-    app: Omit<
-      Application,
-      "id" | "uptime" | "memory" | "cpu" | "restarts" | "lastDeployed"
-    >
-  ) => void;
+  onSubmit: (app: DeployApplicationData) => void;
   onCancel: () => void;
 }
 
@@ -63,16 +58,11 @@ export default function AddApplicationModal({
     e.preventDefault();
 
     if (validateForm()) {
-      // Auto-generate path if not manually set
-      const finalPath = path.trim() || `/var/www/${name.toLowerCase().replace(/[^a-z0-9-]/g, "-")}`;
-
       onSubmit({
         name: name.trim(),
         repository: repository.trim(),
-        branch: branch.trim(),
-        path: finalPath,
+        branch: branch.trim() || 'main',
         port: parseInt(port) || 3000,
-        status: "stopped",
       });
 
       // Reset form

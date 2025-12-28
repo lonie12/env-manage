@@ -1,4 +1,4 @@
-import type { LogEntry } from "@/mocks/logs.mock";
+import type { LogEntry } from "@/api";
 
 interface LogEntryRowProps {
   log: LogEntry;
