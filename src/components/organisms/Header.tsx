@@ -10,7 +10,7 @@ interface HeaderProps {
 export default function Header({ onAddApp }: HeaderProps) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();
@@ -21,23 +21,12 @@ export default function Header({ onAddApp }: HeaderProps) {
     <header className="sticky top-0 z-50 bg-white dark:bg-secondary-900 border-b dark:border-b-[0.4px] border-secondary-200 dark:border-secondary-700">
       <div className="px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <h1 className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
-          Server Manager
+        <h1 className="text-xl font-bold bg-linear-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+          EManage
         </h1>
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          {user && (
-            <div className="hidden md:block text-right mr-4">
-              <p className="text-sm font-semibold text-secondary-900 dark:text-secondary-100">
-                {user.username}
-              </p>
-              <p className="text-xs text-secondary-500 dark:text-secondary-400 capitalize">
-                {user.role}
-              </p>
-            </div>
-          )}
-
           {onAddApp && (
             <Button
               size="md"
