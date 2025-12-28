@@ -7,3 +7,5 @@ export { default as RestartNotification } from "./RestartNotification";
 export { default as ErrorDrawer } from "./ErrorDrawer";
 export { default as DeploymentStatus } from "./DeploymentStatus";
 export { default as EmptyStateApps } from "./EmptyStateApps";
+export { default as DatabaseStatusCard } from "./DatabaseStatusCard";
+export { default as MigrationRow } from "./MigrationRow";
