@@ -32,6 +32,12 @@ export interface DatabaseActionResponse {
   output?: string;
 }
 
+export interface SchemaResponse {
+  success: boolean;
+  schema?: string;
+  error?: string;
+}
+
 export type DatabaseAction = 'push' | 'generate' | 'migrate';
 
 export const databaseApi = {
@@ -84,5 +90,14 @@ export const databaseApi = {
    */
   runMigrations: async (appId: string): Promise<DatabaseActionResponse> => {
     return databaseApi.executeAction(appId, 'migrate');
+  },
+
+  /**
+   * Get database schema content
+   */
+  getSchema: async (appId: string): Promise<SchemaResponse> => {
+    return apiClient.get<SchemaResponse>(
+      `/api/applications/${appId}/database/schema`
+    );
   },
 };

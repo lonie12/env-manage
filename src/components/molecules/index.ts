@@ -9,3 +9,4 @@ export { default as DeploymentStatus } from "./DeploymentStatus";
 export { default as EmptyStateApps } from "./EmptyStateApps";
 export { default as DatabaseStatusCard } from "./DatabaseStatusCard";
 export { default as MigrationRow } from "./MigrationRow";
+export { default as SchemaViewer } from "./SchemaViewer";
